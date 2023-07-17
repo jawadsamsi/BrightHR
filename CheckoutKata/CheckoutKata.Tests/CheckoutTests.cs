@@ -148,5 +148,25 @@ namespace CheckoutKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void GetTotalPrice_MultipleItemsAlongWithSpecialPricesItemScan_ReturnTotalPrice()
+        {
+            // Arrange
+            ICheckout checkout = new Checkout(skuPriceList);
+            checkout.Scan("A");
+            checkout.Scan("A");
+            checkout.Scan("A");
+            checkout.Scan("B");
+            checkout.Scan("B");
+            checkout.Scan("C");
+            checkout.Scan("D");
+
+            // Act
+            int actual = checkout.GetTotalPrice();
+
+            // Assert
+            Assert.AreEqual(210, actual);
+        }
+
     }
 }
