@@ -34,5 +34,19 @@ namespace CheckoutKata.Tests
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void GetTotalPrice_OneItemScan_ReturnItemPrice()
+        {
+            // Arrange
+            ICheckout checkout = new Checkout();
+            checkout.Scan("A");
+
+            // Act
+            int actual = checkout.GetTotalPrice();
+
+            // Assert
+            Assert.AreEqual(50, actual);
+        }
     }
 }
