@@ -20,5 +20,18 @@ namespace CheckoutKata.Tests
             // Assert
             Assert.Throws<ArgumentException>(() => checkout.Scan(""));
         }
+
+        [Test]
+        public void GetTotalPrice_NoItemScan_ReturnZero()
+        {
+            // Arrange
+            ICheckout checkout = new Checkout();
+
+            // Act
+            int actual = checkout.GetTotalPrice();
+
+            // Assert
+            Assert.AreEqual(0, actual);
+        }
     }
 }
