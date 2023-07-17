@@ -1,4 +1,5 @@
-﻿using CheckoutKata.Repository.Classes;
+﻿using CheckoutKata.Models;
+using CheckoutKata.Repository.Classes;
 using CheckoutKata.Repository.Interfaces;
 using NUnit.Framework;
 
@@ -11,11 +12,27 @@ namespace CheckoutKata.Tests
     [TestFixture]
     public class CheckoutTests
     {
+        // Initialise the parameters
+        private List<SKUPriceModel> skuPriceList;
+
+        [SetUp]
+        public void Setup()
+        {
+            skuPriceList = new List<SKUPriceModel>()
+            {
+                new SKUPriceModel{Name= "A", Price = 50},
+                new SKUPriceModel{Name= "B", Price = 30},
+                new SKUPriceModel{Name= "C", Price = 20},
+                new SKUPriceModel{Name= "D", Price = 15}
+            };
+        }
+
+
         [Test]
         public void Scan_EmptyItemScan_ReturnException()
         {
             // Arrange
-            ICheckout checkout = new Checkout();
+            ICheckout checkout = new Checkout(skuPriceList);
 
             // Assert
             Assert.Throws<ArgumentException>(() => checkout.Scan(""));
@@ -26,7 +43,7 @@ namespace CheckoutKata.Tests
         {
             // Arrange
             int expected = 0;
-            ICheckout checkout = new Checkout();
+            ICheckout checkout = new Checkout(skuPriceList);
 
             // Act
             int actual = checkout.GetTotalPrice();
@@ -39,7 +56,7 @@ namespace CheckoutKata.Tests
         public void GetTotalPrice_OneItemScan_ReturnItemPrice()
         {
             // Arrange
-            ICheckout checkout = new Checkout();
+            ICheckout checkout = new Checkout(skuPriceList);
             checkout.Scan("A");
 
             // Act

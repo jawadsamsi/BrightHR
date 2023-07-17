@@ -1,4 +1,5 @@
-﻿using CheckoutKata.Repository.Interfaces;
+﻿using CheckoutKata.Models;
+using CheckoutKata.Repository.Interfaces;
 
 namespace CheckoutKata.Repository.Classes
 {
@@ -7,7 +8,17 @@ namespace CheckoutKata.Repository.Classes
      */
     public class Checkout : ICheckout
     {
-      
+        // Initialise the parameters
+        private readonly List<SKUPriceModel> _skuPriceList;
+        private readonly Dictionary<string, int> _scannedItems;
+
+        // Constructor
+        public Checkout(List<SKUPriceModel> skuPriceList)
+        {
+            _skuPriceList = skuPriceList;
+            _scannedItems = new Dictionary<string, int>();            
+        }
+
         // Method to the scan the item 
         public void Scan(string item)
         {
@@ -16,13 +27,36 @@ namespace CheckoutKata.Repository.Classes
             {
                 throw new ArgumentException("Error. Please scan an item");
             }
+
+            if (_scannedItems.Keys.Contains(item))
+            {
+                _scannedItems[item]++;
+            }
+            else
+            {
+                _scannedItems.Add(item, 1);
+            }
            
         }
 
         // Method to get the total price of the items scanned
         public int GetTotalPrice()
         {
-            return 0;
+            // Parameters
+            int totalPrice = 0;
+
+            // Loop each scanned item and return the total list
+            foreach (var item in _scannedItems)
+            {
+                // Get the individual item data
+                var itemData = _skuPriceList.FirstOrDefault(s => s.Name == item.Key);
+                if (itemData !=  null)
+                {
+                    totalPrice = totalPrice + itemData.Price;
+                }
+              
+            }
+            return totalPrice;
         }
 
     }
