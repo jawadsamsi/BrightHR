@@ -7,6 +7,7 @@ namespace CheckoutKata.Repository.Classes
      */
     public class Checkout : ICheckout
     {
+      
         // Method to the scan the item 
         public void Scan(string item)
         {
@@ -17,5 +18,12 @@ namespace CheckoutKata.Repository.Classes
             }
            
         }
+
+        // Method to get the total price of the items scanned
+        public int GetTotalPrice()
+        {
+            return 0;
+        }
+
     }
 }
