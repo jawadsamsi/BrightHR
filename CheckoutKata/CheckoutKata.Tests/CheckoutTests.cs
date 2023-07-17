@@ -25,13 +25,14 @@ namespace CheckoutKata.Tests
         public void GetTotalPrice_NoItemScan_ReturnZero()
         {
             // Arrange
+            int expected = 0;
             ICheckout checkout = new Checkout();
 
             // Act
             int actual = checkout.GetTotalPrice();
 
             // Assert
-            Assert.AreEqual(0, actual);
+            Assert.AreEqual(expected, actual);
         }
     }
 }
