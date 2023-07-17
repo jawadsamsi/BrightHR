@@ -28,6 +28,14 @@ namespace CheckoutKata.Repository.Classes
                 throw new ArgumentException("Error. Please scan an item");
             }
 
+            // Check if the item exists in the sku list
+            var itemData = _skuPriceList.FirstOrDefault(s => s.Name == item); 
+            if (itemData == null)
+            {
+                throw new ArgumentException("Error. Invalid item");
+            }
+
+            // If exists
             if (_scannedItems.Keys.Contains(item))
             {
                 _scannedItems[item]++;
@@ -36,7 +44,6 @@ namespace CheckoutKata.Repository.Classes
             {
                 _scannedItems.Add(item, 1);
             }
-           
         }
 
         // Method to get the total price of the items scanned
