@@ -12,162 +12,172 @@ namespace CheckoutKata.Tests
     [TestFixture]
     public class CheckoutTests
     {
-        // Initialise the parameters
-        private List<SKUPriceModel> skuPriceList;
-
-        [SetUp]
-        public void Setup()
+        // Method to instantiate the checkout
+        private static Checkout CreateCheckout()
         {
-            skuPriceList = new List<SKUPriceModel>()
+            var skuPriceList = new List<SKUPriceModel>()
             {
                 new SKUPriceModel{Name= "A", Price = 50, SKUSpecialPrice = new SKUSpecialPriceModel(){ Quantity = 3, SpecialPrice = 130 }},
                 new SKUPriceModel{Name= "B", Price = 30, SKUSpecialPrice = new SKUSpecialPriceModel(){ Quantity = 2, SpecialPrice = 45 }},
                 new SKUPriceModel{Name= "C", Price = 20},
                 new SKUPriceModel{Name= "D", Price = 15}
             };
+            return new Checkout(skuPriceList);
         }
 
-        [Test]
-        public void Scan_EmptyItemScan_ReturnException()
+        [TestFixture]
+        public class Scan
         {
-            // Arrange
-            ICheckout checkout = new Checkout(skuPriceList);
+            [Test]
+            public void EmptyItemScan_ReturnException()
+            {
+                // Arrange
+                ICheckout checkout = CreateCheckout();
 
-            // Assert
-            Assert.Throws<ArgumentException>(() => checkout.Scan(""));
+                // Assert
+                Assert.Throws<ArgumentException>(() => checkout.Scan(""));
+            }
+
+            [Test]
+            public void InvalidItem_ReturnException()
+            {
+                // Arrange
+                ICheckout checkout = CreateCheckout();
+
+                // Assert
+                Assert.Throws<ArgumentException>(() => checkout.Scan("E"));
+            }
         }
 
-        [Test]
-        public void GetTotalPrice_NoItemScan_ReturnZero()
+        [TestFixture]
+        public class GetTotalPrice
         {
-            // Arrange
-            int expected = 0;
-            ICheckout checkout = new Checkout(skuPriceList);
+            [Test]
+            public void NoItemScan_ReturnZero()
+            {
+                // Arrange
+                int expected = 0;
+                ICheckout checkout = CreateCheckout();
 
-            // Act
-            int actual = checkout.GetTotalPrice();
+                // Act
+                int actual = checkout.GetTotalPrice();
 
-            // Assert
-            Assert.AreEqual(expected, actual);
+                // Assert
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void OneItemScan_ReturnItemPrice()
+            {
+                // Arrange
+                int expected = 50;
+                ICheckout checkout = CreateCheckout();
+                checkout.Scan("A");
+
+                // Act
+                int actual = checkout.GetTotalPrice();
+
+                // Assert
+                Assert.AreEqual(expected, actual);
+            }
+
+
+
+            [Test]
+            public void MultipleItemScan_ReturnItemPrices()
+            {
+                // Arrange
+                int expected = 115;
+                ICheckout checkout = CreateCheckout();
+                checkout.Scan("A");
+                checkout.Scan("B");
+                checkout.Scan("C");
+                checkout.Scan("D");
+
+                // Act
+                int actual = checkout.GetTotalPrice();
+
+                // Assert
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void SpecialPriceItemScan_ReturnSpecialPrice()
+            {
+                // Arrange
+                int expected = 130;
+                ICheckout checkout = CreateCheckout();
+                checkout.Scan("A");
+                checkout.Scan("A");
+                checkout.Scan("A");
+
+                // Act
+                int actual = checkout.GetTotalPrice();
+
+                // Assert
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void MultipleSpecialPriceItemScan_ReturnSpecialPrice()
+            {
+                // Arrange
+                int expected = 175;
+                ICheckout checkout = CreateCheckout();
+                checkout.Scan("A");
+                checkout.Scan("A");
+                checkout.Scan("A");
+                checkout.Scan("B");
+                checkout.Scan("B");
+
+                // Act
+                int actual = checkout.GetTotalPrice();
+
+                // Assert
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void OneItemAlongWithSpecialPriceItemScan_ReturnTotalPrice()
+            {
+                // Arrange
+                int expected = 180;
+                ICheckout checkout = CreateCheckout();
+                checkout.Scan("A");
+                checkout.Scan("A");
+                checkout.Scan("A");
+                checkout.Scan("A");
+
+                // Act
+                int actual = checkout.GetTotalPrice();
+
+                // Assert
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void MultipleItemsAlongWithSpecialPricesItemScan_ReturnTotalPrice()
+            {
+                // Arrange
+                int expected = 210;
+                ICheckout checkout = CreateCheckout();
+                checkout.Scan("A");
+                checkout.Scan("A");
+                checkout.Scan("A");
+                checkout.Scan("B");
+                checkout.Scan("B");
+                checkout.Scan("C");
+                checkout.Scan("D");
+
+                // Act
+                int actual = checkout.GetTotalPrice();
+
+                // Assert
+                Assert.AreEqual(expected, actual);
+            }
         }
 
-        [Test]
-        public void GetTotalPrice_OneItemScan_ReturnItemPrice()
-        {
-            // Arrange
-            int expected = 50;
-            ICheckout checkout = new Checkout(skuPriceList);
-            checkout.Scan("A");
-
-            // Act
-            int actual = checkout.GetTotalPrice();
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void Scan_InvalidItem_ReturnException()
-        {
-            // Arrange
-            ICheckout checkout = new Checkout(skuPriceList);
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => checkout.Scan("E"));
-        }
-
-        [Test]
-        public void GetTotalPrice_MultipleItemScan_ReturnItemPrices()
-        {
-            // Arrange
-            int expected = 115;
-            ICheckout checkout = new Checkout(skuPriceList);
-            checkout.Scan("A");
-            checkout.Scan("B");
-            checkout.Scan("C");
-            checkout.Scan("D");
-
-            // Act
-            int actual = checkout.GetTotalPrice();
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void GetTotalPrice_SpecialPriceItemScan_ReturnSpecialPrice()
-        {
-            // Arrange
-            int expected = 130;
-            ICheckout checkout = new Checkout(skuPriceList);
-            checkout.Scan("A");
-            checkout.Scan("A");
-            checkout.Scan("A");
-
-            // Act
-            int actual = checkout.GetTotalPrice();
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void GetTotalPrice_MultipleSpecialPriceItemScan_ReturnSpecialPrice()
-        {
-            // Arrange
-            int expected = 175;
-            ICheckout checkout = new Checkout(skuPriceList);
-            checkout.Scan("A");
-            checkout.Scan("A");
-            checkout.Scan("A");
-            checkout.Scan("B");
-            checkout.Scan("B");
-
-            // Act
-            int actual = checkout.GetTotalPrice();
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void GetTotalPrice_OneItemAlongWithSpecialPriceItemScan_ReturnTotalPrice()
-        {
-            // Arrange
-            int expected = 180;
-            ICheckout checkout = new Checkout(skuPriceList);
-            checkout.Scan("A");
-            checkout.Scan("A");
-            checkout.Scan("A");
-            checkout.Scan("A");
-
-            // Act
-            int actual = checkout.GetTotalPrice();
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void GetTotalPrice_MultipleItemsAlongWithSpecialPricesItemScan_ReturnTotalPrice()
-        {
-            // Arrange
-            int expected = 210;
-            ICheckout checkout = new Checkout(skuPriceList);
-            checkout.Scan("A");
-            checkout.Scan("A");
-            checkout.Scan("A");
-            checkout.Scan("B");
-            checkout.Scan("B");
-            checkout.Scan("C");
-            checkout.Scan("D");
-
-            // Act
-            int actual = checkout.GetTotalPrice();
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
+        
 
     }
 }
