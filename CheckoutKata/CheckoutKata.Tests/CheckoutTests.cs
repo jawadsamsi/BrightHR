@@ -66,5 +66,15 @@ namespace CheckoutKata.Tests
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void Scan_InvalidItem_ReturnException()
+        {
+            // Arrange
+            ICheckout checkout = new Checkout(skuPriceList);
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => checkout.Scan("E"));
+        }
     }
 }
