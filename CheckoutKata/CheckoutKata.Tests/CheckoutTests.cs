@@ -152,6 +152,7 @@ namespace CheckoutKata.Tests
         public void GetTotalPrice_MultipleItemsAlongWithSpecialPricesItemScan_ReturnTotalPrice()
         {
             // Arrange
+            int expected = 210;
             ICheckout checkout = new Checkout(skuPriceList);
             checkout.Scan("A");
             checkout.Scan("A");
@@ -165,7 +166,7 @@ namespace CheckoutKata.Tests
             int actual = checkout.GetTotalPrice();
 
             // Assert
-            Assert.AreEqual(210, actual);
+            Assert.AreEqual(expected, actual);
         }
 
     }
