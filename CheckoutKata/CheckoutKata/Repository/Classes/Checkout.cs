@@ -35,7 +35,7 @@ namespace CheckoutKata.Repository.Classes
                 throw new ArgumentException("Error. Invalid item");
             }
 
-            // If exists
+            // If exists add to the scanned item 
             if (_scannedItems.Keys.Contains(item))
             {
                 _scannedItems[item]++;

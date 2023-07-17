@@ -25,6 +25,7 @@ namespace CheckoutKata.Tests
             return new Checkout(skuPriceList);
         }
 
+        // Scan Tests
         [TestFixture]
         public class Scan
         {
@@ -49,6 +50,7 @@ namespace CheckoutKata.Tests
             }
         }
 
+        // Get Total Price Tests
         [TestFixture]
         public class GetTotalPrice
         {
