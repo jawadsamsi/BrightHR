@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using CheckoutKata.Repository.Classes;
+using CheckoutKata.Repository.Interfaces;
+using NUnit.Framework;
 
 namespace CheckoutKata.Tests
 {
