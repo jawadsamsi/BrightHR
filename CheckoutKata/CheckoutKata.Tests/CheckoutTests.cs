@@ -76,5 +76,21 @@ namespace CheckoutKata.Tests
             // Assert
             Assert.Throws<ArgumentException>(() => checkout.Scan("E"));
         }
+
+        [Test]
+        public void GetTotalPrice_MultipleItemScan_ReturnItemPrices()
+        {
+            // Arrange
+            ICheckout checkout = new Checkout(skuPriceList);
+            checkout.Scan("A");
+            checkout.Scan("B");
+            checkout.Scan("C");
+            checkout.Scan("D");
+            // Act
+            int actual = checkout.GetTotalPrice();
+
+            // Assert
+            Assert.AreEqual(115, actual);
+        }
     }
 }
