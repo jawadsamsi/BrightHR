@@ -57,11 +57,20 @@ namespace CheckoutKata.Repository.Classes
             {
                 // Get the individual item data
                 var itemData = _skuPriceList.FirstOrDefault(s => s.Name == item.Key);
-                if (itemData !=  null)
+
+                // For the special price
+                if (itemData != null && itemData.SKUSpecialPrice != null)
+                {
+                    // Get the special quantity and the remaing quantity and then total it
+                    int specialQuantity = item.Value / itemData.SKUSpecialPrice.Quantity;
+                    int remainingQuantity = item.Value % itemData.SKUSpecialPrice.Quantity;
+                    totalPrice = totalPrice + (specialQuantity * itemData.SKUSpecialPrice.SpecialPrice) + (remainingQuantity * itemData.Price);
+                }
+                // For the individual price
+                else if(itemData != null)
                 {
                     totalPrice = totalPrice + itemData.Price;
                 }
-              
             }
             return totalPrice;
         }

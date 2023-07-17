@@ -20,13 +20,12 @@ namespace CheckoutKata.Tests
         {
             skuPriceList = new List<SKUPriceModel>()
             {
-                new SKUPriceModel{Name= "A", Price = 50},
-                new SKUPriceModel{Name= "B", Price = 30},
+                new SKUPriceModel{Name= "A", Price = 50, SKUSpecialPrice = new SKUSpecialPriceModel(){ Quantity = 3, SpecialPrice = 130 }},
+                new SKUPriceModel{Name= "B", Price = 30, SKUSpecialPrice = new SKUSpecialPriceModel(){ Quantity = 2, SpecialPrice = 45 }},
                 new SKUPriceModel{Name= "C", Price = 20},
                 new SKUPriceModel{Name= "D", Price = 15}
             };
         }
-
 
         [Test]
         public void Scan_EmptyItemScan_ReturnException()
